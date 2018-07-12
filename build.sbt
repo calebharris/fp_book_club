@@ -1,4 +1,4 @@
-name := "function_programming"
+name := "fp_book_club"
 
 version := "0.1"
 

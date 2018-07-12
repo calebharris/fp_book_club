@@ -9,8 +9,8 @@ trait Stream[+A] {
 
   def drop(n: Int): Stream[A] = (n, this) match {
     case (0, _)          => this
-    case (_, Empty)      => empty
     case (_, Cons(_, t)) => t().drop(n - 1)
+    case _               => empty
   }
 
   def exists(p: A => Boolean): Boolean = this match {
@@ -43,8 +43,8 @@ trait Stream[+A] {
 
   def take(n: Int): Stream[A] = (n, this) match {
     case (0, _)          => empty
-    case (_, Empty)      => empty
     case (_, Cons(h, t)) => cons(h(), t().take(n - 1))
+    case _               => empty
   }
 
   def toList: List[A] = this match {
