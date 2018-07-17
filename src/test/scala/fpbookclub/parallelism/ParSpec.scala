@@ -50,6 +50,21 @@ class ParSpec extends FlatSpec with Matchers with Executor {
     value
   }
 
+  "Par.map" should "apply the function to the argument" in {
+    val p = Par.unit("what is my length?")
+    assertResult(18) {
+      Par.run(executionContext)(Par.map(p)(_.length))
+    }
+  }
+
+  "Par.map2" should "apply the function to both arguments" in {
+    val pa = Par.unit("hello")
+    val pb = Par.unit(3)
+    assertResult("hellohellohello") {
+      Par.run(executionContext)(Par.map2(pa, pb)(_ * _))
+    }
+  }
+
   "Par.unit" should "return the value synchronously" in {
     assertResult((6, 0)) {
       (Par.run(executionContext)(Par.unit(6)), taskCount())
@@ -82,6 +97,12 @@ class ParSpec extends FlatSpec with Matchers with Executor {
     assert(t2 >= 1000)
     assertResult(1) {
       taskCount()
+    }
+  }
+
+  "Par.sortPar" should "sort the list" in {
+    assertResult(List(1, 2, 3, 4, 5)) {
+      Par.run(executionContext)(Par.sortPar(Par.unit(List(3, 2, 5, 1, 4))))
     }
   }
 

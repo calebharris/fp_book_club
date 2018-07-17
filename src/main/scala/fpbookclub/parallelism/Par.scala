@@ -46,6 +46,11 @@ object Par {
     override def apply(es: ExecutionContext): Future[A] = Future.successful(a)
   }
 
+  /** Returns a Par that wraps the result of a function applied to the result of a Par
+    */
+  def map[A, B](p: Par[A])(f: A => B): Par[B] =
+    map2(p, unit(()))((a, _) => f(a))
+
   /** Returns a Par that wraps the result of a function applied to the result of two Pars
     */
   def map2[A, B, C](pa: Par[A], pb: Par[B])(f: (A, B) => C): Par[C] =
@@ -64,6 +69,10 @@ object Par {
     val f = pa(es)
     Await.result(f, timeout)
   }
+
+  /** Returns a Par wrapping a sort operation */
+  def sortPar(parList: Par[List[Int]]): Par[List[Int]] =
+    map(parList)(_.sorted)
 
   /** Returns a Par that calculates the sum of a sequence of integers in parallel
     */
